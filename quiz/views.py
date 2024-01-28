@@ -3,17 +3,15 @@ from time import strptime
 from django import forms
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
-from .models import QuizGame, WriteQuiz, PlaceQuiz
+from .models import QuizGame, WriteQuiz, PlaceQuiz, Certificate, TeamRanking
 from .forms import WriteQuizForm
 from django.utils import timezone
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from django.core.mail import send_mail
 import locale
-locale.setlocale(
-    category=locale.LC_ALL,
-    locale="Russian"  # Note: do not use "de_DE" as it doesn't work
-)
+locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
+import time
 
 import requests
 from concurrent.futures import ThreadPoolExecutor
@@ -25,38 +23,6 @@ chat_id_vlad = "262031692"
 chat_id_nikita = "763254172"
 chat_id_dasha = "1486946036"
 chat_id_kolya = "795626015"
-# message = '*Сообщение от Django*'
-# url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id}&text={message}&parse_mode=MarkdownV2"
-# print(requests.get(url).json())
-'''
-text = "Please choose an option:"
-options = [
- ["Option 1", "option1"],
- ["Option 2", "option2"]
-]
-
-keyboard = {
- "inline_keyboard": [
- [{"text": option[0], "callback_data": option[1]} for option in options]
- ]
-}
-url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id}&text={text}&reply_markup={json.dumps(keyboard)}"
-
-'''
-news = [
-    {
-        'title': 'Первая запись',
-        'text': 'Много-много текста',
-        'date': '10 Мая 2020',
-        'author': 'Валерий'
-    },
-    {
-        'title': 'Вторая запись',
-        'text': 'Снова много-много текста',
-        'date': '19 Мая 2020',
-        'author': 'Егор'
-    }
-]
 
 
 def get_url(url):
@@ -96,6 +62,16 @@ def home(request):
                         }
                         return JsonResponse(response, status=200)
                 write_quiz.quiz_game = q_g
+                TeamRanking.objects.get_or_create(team=form.cleaned_data['name_team'])
+                team = TeamRanking.objects.filter(team=form.cleaned_data['name_team']).first()
+                certifi = Certificate.objects.filter(number=form.cleaned_data['certificate'],
+                                                     team_ranking=team).first()
+                if form.cleaned_data['certificate'] != '' and not certifi:
+                    print('invalid-certificate')
+                    response = {
+                        'error_certificate': 'invalid-certificate',
+                    }
+                    return JsonResponse(response, status=200)
             else:
                 for i in QuizGame.objects.all().order_by('date').filter(date__gte=timezone.now()):
                     # print(request.POST.get("quiz_game_" + str(i.id)))
@@ -116,6 +92,16 @@ def home(request):
                                 }
                                 return JsonResponse(response, status=200)
                         write_quiz.quiz_game = q_g_
+                        TeamRanking.objects.get_or_create(team=form.cleaned_data['name_team'])
+                        team = TeamRanking.objects.filter(team=form.cleaned_data['name_team']).first()
+                        certifi = Certificate.objects.filter(number=form.cleaned_data['certificate'],
+                                                             team_ranking=team).first()
+                        if form.cleaned_data['certificate'] != '' and not certifi:
+                            print('invalid-certificate')
+                            response = {
+                                'error_certificate': 'invalid-certificate',
+                            }
+                            return JsonResponse(response, status=200)
             '''if form.cleaned_data['quiz_game_'] is not None:
                 write_quiz.quiz_game = form.cleaned_data['quiz_game_']'''
             write_quiz.count_players = request.POST.get("count_players")
@@ -150,9 +136,10 @@ def home(request):
             url_kolya = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_kolya}&text={message8}&parse_mode=MarkdownV2"
             urls = [url_vlad, url_nikita, url_dasha, url_kolya]
 
-            with ThreadPoolExecutor(max_workers=3) as pool:
-                list(pool.map(get_url, urls))
-                # print(list(pool.map(get_url, urls)))
+            '''with ThreadPoolExecutor(max_workers=3) as pool:
+                list(pool.map(get_url, urls))'''
+            time.sleep(3)
+            # print(list(pool.map(get_url, urls)))
             # requests.get(url_vlad).json()
             # requests.get(url_nikita).json()
             # requests.get(url_dasha).json()
@@ -258,6 +245,16 @@ def timetable(request):
                         }
                         return JsonResponse(response, status=200)
                 write_quiz.quiz_game = q_g
+                TeamRanking.objects.get_or_create(team=form.cleaned_data['name_team'])
+                team = TeamRanking.objects.filter(team=form.cleaned_data['name_team']).first()
+                certifi = Certificate.objects.filter(number=form.cleaned_data['certificate'],
+                                                     team_ranking=team).first()
+                if form.cleaned_data['certificate'] != '' and not certifi:
+                    print('invalid-certificate')
+                    response = {
+                        'error_certificate': 'invalid-certificate',
+                    }
+                    return JsonResponse(response, status=200)
             else:
                 for i in QuizGame.objects.all().order_by('date').filter(date__gte=timezone.now()):
                     # print(request.POST.get("quiz_game_" + str(i.id)))
@@ -278,6 +275,16 @@ def timetable(request):
                                 }
                                 return JsonResponse(response, status=200)
                         write_quiz.quiz_game = q_g_
+                        TeamRanking.objects.get_or_create(team=form.cleaned_data['name_team'])
+                        team = TeamRanking.objects.filter(team=form.cleaned_data['name_team']).first()
+                        certifi = Certificate.objects.filter(number=form.cleaned_data['certificate'],
+                                                             team_ranking=team).first()
+                        if form.cleaned_data['certificate'] != '' and not certifi:
+                            print('invalid-certificate')
+                            response = {
+                                'error_certificate': 'invalid-certificate',
+                            }
+                            return JsonResponse(response, status=200)
             '''if form.cleaned_data['quiz_game_'] is not None:
                 write_quiz.quiz_game = form.cleaned_data['quiz_game_']'''
             write_quiz.count_players = request.POST.get("count_players")
@@ -315,8 +322,9 @@ def timetable(request):
             url_kolya = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_kolya}&text={message8}&parse_mode=MarkdownV2"
             urls = [url_vlad, url_nikita, url_dasha, url_kolya]
 
-            with ThreadPoolExecutor(max_workers=3) as pool:
-                list(pool.map(get_url, urls))
+            '''with ThreadPoolExecutor(max_workers=3) as pool:
+                list(pool.map(get_url, urls))'''
+            time.sleep(3)
                 #print(list(pool.map(get_url, urls)))
             #requests.get(url_vlad).json()
             #requests.get(url_nikita).json()
@@ -421,6 +429,16 @@ def rules(request):
                         }
                         return JsonResponse(response, status=200)
                 write_quiz.quiz_game = q_g
+                TeamRanking.objects.get_or_create(team=form.cleaned_data['name_team'])
+                team = TeamRanking.objects.filter(team=form.cleaned_data['name_team']).first()
+                certifi = Certificate.objects.filter(number=form.cleaned_data['certificate'],
+                                                     team_ranking=team).first()
+                if form.cleaned_data['certificate'] != '' and not certifi:
+                    print('invalid-certificate')
+                    response = {
+                        'error_certificate': 'invalid-certificate',
+                    }
+                    return JsonResponse(response, status=200)
             '''if form.cleaned_data['quiz_game_'] is not None:
                 write_quiz.quiz_game = form.cleaned_data['quiz_game_']'''
             write_quiz.count_players = request.POST.get("count_players")
@@ -452,8 +470,9 @@ def rules(request):
             url_kolya = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_kolya}&text={message8}&parse_mode=MarkdownV2"
             urls = [url_vlad, url_nikita, url_dasha, url_kolya]
 
-            with ThreadPoolExecutor(max_workers=3) as pool:
-                list(pool.map(get_url, urls))
+            '''with ThreadPoolExecutor(max_workers=3) as pool:
+                list(pool.map(get_url, urls))'''
+            time.sleep(3)
 
             '''send_mail(
                 "Запись на квиз Break Brain",

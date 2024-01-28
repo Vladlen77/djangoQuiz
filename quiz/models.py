@@ -1,9 +1,10 @@
+import random
 import uuid
-
+import string
+import secrets
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from phonenumber_field.modelfields import PhoneNumberField
 
 
 # Create your models here.
@@ -83,3 +84,32 @@ class WriteQuiz(models.Model):
 
     def __str__(self):
         return self.name_team
+
+
+def f():
+    return ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(9))
+
+
+class TeamRanking(models.Model):
+    team = models.CharField(max_length=50, verbose_name='Название команды')
+    count_games = models.IntegerField(verbose_name="Количество игр", null=True, blank=True)
+    count_scores = models.IntegerField(verbose_name="Количество баллов", null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'рейтинг команды'
+        verbose_name_plural = 'Рейтинг команд'
+
+    def __str__(self):
+        return self.team
+
+
+class Certificate(models.Model):
+    number = models.CharField(max_length=50, verbose_name='Сертификат', default=f, unique=True)
+    team_ranking = models.ForeignKey(TeamRanking, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'сертификат'
+        verbose_name_plural = 'Сертификаты'
+
+    def __str__(self):
+        return self.number

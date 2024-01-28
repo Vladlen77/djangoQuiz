@@ -64,7 +64,7 @@
                         </div>
                         <div class="d-flex text-center align-items-center mb-2">
                             <img src="{% static 'quiz/img/cash.svg' %}" alt="" width="18" height="18" class="me-2">
-                            <p class="card-text">{{ game.price }} руб.</p>
+                            <p class="card-text">{{ game.price }} руб./чел.</p>
                         </div>
                         <button class="btn btn-cyan mt-2" data-bs-toggle="modal" data-bs-target="#modal_{{ game.id }}">Регистрация</button>
                     </div>
@@ -117,7 +117,7 @@
                         </div>
                         <div class="d-flex text-center align-items-center mb-2">
                             <img src="{% static 'quiz/img/cash.svg' %}" alt="" width="18" height="18" class="me-2">
-                            <p class="card-text text-light">{{ game.price }} руб.</p>
+                            <p class="card-text text-light">{{ game.price }} руб./чел.</p>
                         </div>
                         <button class="btn btn-light mt-2" data-bs-toggle="modal" data-bs-target="#modal_{{ game.id }}" disabled>Регистрация закрыта</button>
                     </div>
@@ -184,7 +184,7 @@
                                     {# form.quiz_game_ #}
                                 </div>
                                 <div class="d-flex justify-content-center">
-                                    <a class="link-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                    <a class="link-secondary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                                         Комментарий к регистрации
                                     </a>
                                 </div>
@@ -193,6 +193,18 @@
                                     <div class="mb-3">
                                         {{ form.comment }}
                                         <div class="invalid-feedback" id="invalid-feedback-comment"></div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center my-2">
+                                    <a class="link-secondary" data-bs-toggle="collapse" href="#certificatelink" role="button" aria-expanded="false" aria-controls="certificate">
+                                        У меня сертификат
+                                    </a>
+                                </div>
+                                <!--Сертификат-->
+                                <div class="collapse my-3" id="certificatelink">
+                                    <div class="mb-3">
+                                        {{ form.certificate }}
+                                        <div class="invalid-feedback" id="invalid-feedback-certificate"></div>
                                     </div>
                                 </div>
                             </div>

@@ -1,6 +1,5 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from phonenumber_field.formfields import PhoneNumberField
 from django.utils import timezone
 from datetime import datetime, timedelta
 from .models import WriteQuiz, PlaceQuiz, QuizGame
@@ -43,10 +42,14 @@ class WriteQuizForm(forms.ModelForm):
     comment = forms.CharField(validators=[comment_regex], required=False, widget=forms.Textarea(
         attrs={'id': 'comment', 'class': 'form-control-custom text-center', 'rows': '3', 'placeholder': 'Комментарий'}),
         error_messages={'invalid': 'Укажите комментарий корректно! Допускается использовать русский и английский алфавиты, цифры и следующие знаки: « , », « . », « ? », « ! », « ` », « ( », « ) », « - »'})
+    certificate_regex = RegexValidator(r'^[0-9a-zA-Z]*$')
+    certificate = forms.CharField(validators=[certificate_regex], required=False, widget=forms.TextInput(
+        attrs={'id': 'certificate', 'class': 'form-control-custom text-center', 'rows': '3', 'placeholder': 'Сертификат'}),
+        error_messages={'invalid': 'Укажите номер сертификат корректно! Допускается использовать английский алфавиты и цифры.'})
 
     class Meta:
         model = WriteQuiz
-        fields = ('name_team', 'name_leader', 'count_players', 'phone_number', 'email', 'comment')
+        fields = ('name_team', 'name_leader', 'count_players', 'phone_number', 'email', 'comment', 'certificate')
 
     def __init__(self, *args, **kwargs):
         quiz_game_ = kwargs.pop('quiz_game_', [])

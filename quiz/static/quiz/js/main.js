@@ -21,6 +21,10 @@ $(document).ready(function (e) {
     const itemsCount = items.length;
     let i = ITEMS_COUNT_PER_CLICK;
 
+    if (i >= itemsCount) {
+        showButton.style.display = 'none';
+    }
+
     for (; i < itemsCount; ++i) {
         items[i].style.display = 'none';
     }
@@ -36,17 +40,9 @@ $(document).ready(function (e) {
                 break;
             }
         }
-        /*for (; i < itemsCount; i++) {
-
-        }*/
-        /*items[i++].style.display = '';
-        if (i < itemsCount) {
-            items[i++].style.display = '';
-            items[i++].style.display = '';
-        }*/
-          if (i >= itemsCount) {
+        if (i >= itemsCount) {
             showButton.style.display = 'none';
-          }
+        }
     };
 
     showButton.addEventListener('click', callback);
@@ -99,6 +95,9 @@ document.querySelectorAll('[data-bs-toggle="popover"]')
         /* comment */
         var $comment= $(this).find('#comment');
         var $invalid_comment= $(this).find('#invalid-feedback-comment');
+        /* certificate */
+        var $certificate= $(this).find('#certificate');
+        var $invalid_certificate= $(this).find('#invalid-feedback-certificate');
         $button.attr('class', 'btn btn-cyan disabled').html('<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Готово');
         $name_team.attr('class', 'form-control-custom text-center is-valid');
         $invalid_name_team.html('');
@@ -110,6 +109,8 @@ document.querySelectorAll('[data-bs-toggle="popover"]')
         $invalid_phone_number.html('');
         $comment.attr('class', 'form-control-custom text-center is-valid');
         $invalid_comment.html('');
+        $certificate.attr('class', 'form-control-custom text-center is-valid');
+        $invalid_certificate.html('');
         // create an AJAX call
         //alert('AJAX')
         $.ajax({
@@ -121,8 +122,9 @@ document.querySelectorAll('[data-bs-toggle="popover"]')
                 var errors = response.errors;
                 var error_name_team = response.error_name_team;
                 var error_name_leader = response.error_name_leader;
+                var error_certificate = response.error_certificate;
                 //alert(errors);
-                if (errors || error_name_team || error_name_leader) {
+                if (errors || error_name_team || error_name_leader || error_certificate) {
                     $button.attr('class', 'btn btn-cyan').html('Готово');
                     //alert(errors['phone_number']);
                     /* Валидация */
@@ -145,6 +147,16 @@ document.querySelectorAll('[data-bs-toggle="popover"]')
                     {
                         $name_leader.attr('class', 'form-control-custom text-center is-valid');
                         $invalid_name_leader.html('');
+                    }
+                    if (error_certificate == 'invalid-certificate')
+                    {
+                        $certificate.attr('class', 'form-control-custom text-center is-invalid');
+                        $invalid_certificate.html('<span>Номер сертификата для вашей команды не найден. Проверьте правильность введенного номера.</span>\n')
+                    }
+                    else
+                    {
+                        $certificate.attr('class', 'form-control-custom text-center is-valid');
+                        $invalid_certificate.html('');
                     }
                     if (errors) {
                         if (errors['name_team']) {
@@ -224,8 +236,23 @@ document.querySelectorAll('[data-bs-toggle="popover"]')
                             $comment.attr('class', 'form-control-custom text-center is-valid');
                             $invalid_comment.html('');
                         }
+                        if (errors['certificate']) {
+                            //alert($phone_number);
+                            $certificate.attr('class', 'form-control-custom text-center is-invalid');
+                            $invalid_certificate.html('<span>' + errors['certificate'] + '</span>\n');
+                            /*const div = document.createElement("div");
+                            div.classList.add('invalid-feedback');
+                            div.innerHTML = '<span>' + errors['phone_number'] + '</span>\n';
+                            $phone_number.after(div);*/
+                            //alert(response.errors['phone_number'])
+                        }
+                        else
+                        {
+                            $certificate.attr('class', 'form-control-custom text-center is-valid');
+                            $invalid_certificate.html('');
+                        }
                     }
-                    else {
+                    /*else {
                         $name_team.attr('class', 'form-control-custom text-center is-valid');
                         $invalid_name_team.html('');
                         $name_leader.attr('class', 'form-control-custom text-center is-valid');
@@ -236,7 +263,9 @@ document.querySelectorAll('[data-bs-toggle="popover"]')
                         $invalid_email.html('');
                         $comment.attr('class', 'form-control-custom text-center is-valid');
                         $invalid_comment.html('');
-                    }
+                        $certificate.attr('class', 'form-control-custom text-center is-valid');
+                        $invalid_certificate.html('');
+                    }*/
                 }
                 else {
                     location.reload();
