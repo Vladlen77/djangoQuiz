@@ -1,4 +1,4 @@
-$(document).ready(function (e) {
+function scrollbottom() {
     const scrollbarVisible = (element) => {
         return element.scrollHeight > element.clientHeight;
     }
@@ -12,6 +12,9 @@ $(document).ready(function (e) {
     } else {
         $('#foot').addClass('fixed-bottom');
     }
+}
+$(document).ready(function (e) {
+    scrollbottom();
     document.querySelector('html').scrollTop = 0;
 
     const ITEMS_COUNT_PER_CLICK = 3;
@@ -321,3 +324,39 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
 })
+
+var dataTable = $('#example').dataTable({
+        "ordering": true,
+        "order": [[ 2, "desc" ]],
+        "info": false,
+        "bLengthChange": false,
+        "responsive": true,
+        "iDisplayLength": 20,
+        "sDom": '<"row view-filter"<"col-sm-12"<"pull-left"l><"pull-right"f><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
+        "fnDrawCallback": function ( oSettings ){
+            if(oSettings.fnRecordsTotal() < 20){
+                $('.dataTables_length').hide();
+                $('.dataTables_paginate').hide();
+            } else {
+                $('.dataTables_length').show();
+                $('.dataTables_paginate').show();
+            }
+        },
+        language: {
+            url: '/static/quiz/js/datatables.ru.json',
+        },
+    });
+
+$("#searchbox").keyup(function() {
+    if (this.value === "")
+    {
+        $('#foot').removeClass('fixed-bottom');
+    }
+    dataTable.fnFilter(this.value);
+
+    scrollbottom();
+});
+
+window.addEventListener('resize', function(event) {
+    scrollbottom();
+}, true);

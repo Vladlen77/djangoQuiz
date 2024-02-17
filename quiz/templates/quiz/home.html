@@ -60,7 +60,7 @@
                         </div>
                         <div class="d-flex text-center align-items-center mb-2">
                             <img src="{% static 'quiz/img/clock.svg' %}" alt="" width="18" height="18" class="me-2">
-                            <p class="card-text">{{ game.date | time:"G" }}:{{ game.date | time:"i" }}</p>
+                            <p class="card-text">{{ game.date | time:"G:i" }}</p>
                         </div>
                         <div class="d-flex text-center align-items-center mb-2">
                             <img src="{% static 'quiz/img/cash.svg' %}" alt="" width="18" height="18" class="me-2">
@@ -113,7 +113,7 @@
                         </div>
                         <div class="d-flex text-center align-items-center mb-2">
                             <img src="{% static 'quiz/img/clock.svg' %}" alt="" width="18" height="18" class="me-2">
-                            <p class="card-text text-light">{{ game.date | time:"G" }}:{{ game.date | time:"i" }}</p>
+                            <p class="card-text text-light">{{ game.date | time:"G:i" }}</p>
                         </div>
                         <div class="d-flex text-center align-items-center mb-2">
                             <img src="{% static 'quiz/img/cash.svg' %}" alt="" width="18" height="18" class="me-2">
@@ -209,11 +209,14 @@
                                 </div>
                             </div>
                             <div class="modal-footer d-flex flex-column">
-                                <div class="justify-content-center">
-                                    <span class="text-muted">Оплата только наличными!</span>
+                                <div class="justify-content-center text-center">
+                                    <span class="text-muted">Нажимая кнопку ГОТОВО, вы подтверждаете, что ваша команда ознакомлена и принимает в полном объеме условия <a href="{% url 'quiz-user_agreement' %}" class="link-secondary">Пользовательского соглашения</a> и <a href="{% url 'quiz-game_rules' game=game.name time=game.date|time:"G:i" %}" class="link-secondary">Правила игры</a>.</span>
                                 </div>
                                  <div class="justify-content-center">
                                     <button type="submit" class="btn btn-cyan rounded-pill">Готово</button>
+                                </div>
+                                <div class="justify-content-center">
+                                    <span class="text-muted">Оплата только наличными!</span>
                                 </div>
                             </div>
                         </form>

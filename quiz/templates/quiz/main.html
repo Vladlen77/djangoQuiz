@@ -1,23 +1,28 @@
 {% load static %}
+{% load pwa %}
 <!doctype html>
 <html lang="en">
 <head>
+    {% progressive_web_app_meta %}
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Присоединяйтесь к захватывающему квизу Break Brain в Балашихе в караоке-баре Martini и узнайте, какая команда обладает самым мощным интеллектом! Регистрируйтесь и соревнуйтесь за звание чемпионов. Следите за рейтингом игроков и докажите, что вы главный знаток интеллектуальной игры Break Brain!"/>
+    <meta name="theme-color" content="#06818F">
 
     <title>{{ title }}</title>
     <link rel="icon" type="image/png" href="{% static 'quiz/img/breakbrain.png' %}">
      <!-- Bootstrap -->
     <link rel="stylesheet" href="{% static 'quiz/css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'quiz/css/_component-examples.scss' %}">
+    <link rel="stylesheet" href="{% static 'quiz/css/dataTables.bootstrap5.css' %}">
     <link rel="stylesheet" href="{% static 'quiz/css/main.css' %}">
     <script src="{% static 'quiz/js/firstmain.js' %} "></script>
     <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">-->
 </head>
 <body id="my_body">
-    <nav class="navbar navbar-expand-lg bg-info bg-gradient navbar-dark" aria-label="Thirteenth navbar example">
+    <nav class="navbar navbar-expand-lg bg-info navbar-dark" aria-label="Thirteenth navbar example">
         <div class="container">
             <a class="navbar-brand col-lg-3 me-0" href="{% url 'quiz-home' %}">
                 <span data-index="53-0" data-translated="false" data-source-lang="en" data-target-lang="ru" data-value="Centered nav" data-translation="Навигация по центру" data-ch="0" data-type="trSpan">
@@ -36,6 +41,11 @@
                     {% if quiz_game %}
                     <li class="nav-item">
                         <a class="nav-link {% if '/timetable/' == request.path %}active{% endif %}" href="{% url 'quiz-timetable' %}"><span data-index="55-0" data-translated="false" data-source-lang="en" data-target-lang="ru" data-value="Timetable" data-translation="Расписание" data-ch="0" data-type="trSpan">Расписание</span></a>
+                    </li>
+                    {% endif %}
+                    {% if team_rating %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if '/rating/' == request.path %}active{% endif %}" href="{% url 'quiz-rating' %}"><span data-index="56-0" data-translated="false" data-source-lang="en" data-target-lang="ru" data-value="Rules" data-translation="Рейтинг команд" data-ch="0" data-type="trSpan">Рейтинг команд</span></a>
                     </li>
                     {% endif %}
                     <li class="nav-item">
@@ -150,11 +160,14 @@
                             </div>
                         </div>
                         <div class="modal-footer d-flex flex-column">
-                            <div class="justify-content-center">
-                                <span class="text-muted">Оплата только наличными!</span>
+                            <div class="justify-content-center text-center">
+                                <span class="text-muted">Нажимая кнопку ГОТОВО, вы подтверждаете, что ваша команда ознакомлена и принимает в полном объеме условия <a href="{% url 'quiz-user_agreement' %}" class="link-secondary">Пользовательского соглашения</a> и <a href="{% url 'quiz-game_rules' game="game" time="17:00" %}" class="link-secondary">Правила игры</a>.</span>
                             </div>
                              <div class="justify-content-center">
                                 <button type="submit" class="btn btn-cyan rounded-pill">Готово</button>
+                            </div>
+                            <div class="justify-content-center">
+                                <span class="text-muted">Оплата только наличными!</span>
                             </div>
                         </div>
                     </form>
@@ -178,6 +191,8 @@
     <script src="{% static 'quiz/js/jquery.min.js' %} "></script>
     <script src="{% static 'quiz/js/bootstrap.bundle.min.js' %} "></script>
     <script src="{% static 'quiz/js/jquery.imask.js' %} "></script>
+    <script src="{% static 'quiz/js/jquery.dataTables.js' %} "></script>
+    <script src="{% static 'quiz/js/dataTables.bootstrap5.js' %} "></script>
     <script src="{% static 'quiz/js/main.js' %} "></script>
     <!--<script src="https://kit.fontawesome.com/2b04abb32c.js" crossorigin="anonymous"></script>-->
 </body>

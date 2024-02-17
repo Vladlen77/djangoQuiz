@@ -1,10 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'quiz/main.html' %}
+{% load static %}
+{% block main_section %}
+    {% if team_rating %}
+        <div class="row justify-content-between mb-3">
+            <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-end center-h5">
+                <h5 class="text-info">Рейтинг команд BREAK BRAIN</h5>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 justify-content-center">
+                <input type="text" id="searchbox" class="form-control-custom text-center mb-2" placeholder="Что ищете?">
+            </div>
+        </div>
+        <!--table-striped-->
+        <table id="example" class="table table-responsive table-borderless">
+            <thead class="text-center bg-info">
+                <tr class="text-light">
+                    <th>МЕСТО</th>
+                    <th>НАЗВАНИЕ КОМАНДЫ</th>
+                    <th>КОЛИЧЕСТВО БАЛЛОВ</th>
+                    <th>КОЛИЧЕСТВО ИГР</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                {% for team in team_rating %}
+                {% if team.count_games != None and team.count_scores != None %}
+                <tr>
+                    <td data-label="Место"><span class="badge bg-info rounded-circle">{{ forloop.counter }}</span></td>
+                    <td data-label="Название команды"><span>{{ team.team }}</span></td>
+                    <td data-label="Количество баллов"><span>{{ team.count_scores }}</span></td>
+                    <td data-label="Количество игр"><span>{{ team.count_games }}</span></td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock main_section %}

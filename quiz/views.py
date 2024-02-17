@@ -119,7 +119,7 @@ def home(request):
                         '- *команда:* ' + write_quiz.name_team +
                         '\n- *капитан*: ' + write_quiz.name_leader + '\n- *телефон*: ' + str(
                     write_quiz.phone_number) + '\n- *email*: ' + write_quiz.email + '\n- *кол-во*: ' + str(
-                    write_quiz.count_players) + '\n- *комментарий*: ' + write_quiz.comment)
+                    write_quiz.count_players) + '\n- *комментарий*: ' + write_quiz.comment + '\n- *сертификат*: ' + write_quiz.certificate)
 
             message1 = message.replace('.', '\\.')
             message2 = message1.replace('(', '\\(')
@@ -129,11 +129,12 @@ def home(request):
             message6 = message5.replace('?', '\\?')
             message7 = message6.replace(',', '\\,')
             message8 = message7.replace('`', '\\`')
+            message9 = message8.replace('_', '\\_')
 
-            url_vlad = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_vlad}&text={message8}&parse_mode=MarkdownV2"
-            url_nikita = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_nikita}&text={message8}&parse_mode=MarkdownV2"
-            url_dasha = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_dasha}&text={message8}&parse_mode=MarkdownV2"
-            url_kolya = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_kolya}&text={message8}&parse_mode=MarkdownV2"
+            url_vlad = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_vlad}&text={message9}&parse_mode=MarkdownV2"
+            url_nikita = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_nikita}&text={message9}&parse_mode=MarkdownV2"
+            url_dasha = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_dasha}&text={message9}&parse_mode=MarkdownV2"
+            url_kolya = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_kolya}&text={message9}&parse_mode=MarkdownV2"
             urls = [url_vlad, url_nikita, url_dasha, url_kolya]
 
             '''with ThreadPoolExecutor(max_workers=3) as pool:
@@ -202,10 +203,11 @@ def home(request):
             return JsonResponse(response, status=200)
     data = {
         'quiz_game': QuizGame.objects.all().order_by('date').filter(date__gte=timezone.now()),
-        'title': 'Главная страница',
+        'title': 'Увлекательная интеллектуальная игра, которая проверит ваши знания и логику.',
         'form': form,
         'choice_quiz_game': choice_quiz_game,
-        'choice_quiz_game_first': choice_quiz_game_first
+        'choice_quiz_game_first': choice_quiz_game_first,
+        'team_rating': TeamRanking.objects.all().order_by('-count_scores')
     }
     return render(request, 'quiz/home.html', data)
 
@@ -306,7 +308,7 @@ def timetable(request):
                        '- *команда:* ' + write_quiz.name_team +
                        '\n- *капитан*: ' + write_quiz.name_leader + '\n- *телефон*: ' + str(
                         write_quiz.phone_number) + '\n- *email*: ' + write_quiz.email + '\n- *кол-во*: ' + str(
-                        write_quiz.count_players) + '\n- *комментарий*: ' + write_quiz.comment)
+                        write_quiz.count_players) + '\n- *комментарий*: ' + write_quiz.comment + '\n- *сертификат*: ' + write_quiz.certificate)
             message1 = message.replace('.', '\\.')
             message2 = message1.replace('(', '\\(')
             message3 = message2.replace(')', '\\)')
@@ -315,11 +317,12 @@ def timetable(request):
             message6 = message5.replace('?', '\\?')
             message7 = message6.replace(',', '\\,')
             message8 = message7.replace('`', '\\`')
+            message9 = message8.replace('_', '\\_')
 
-            url_vlad = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_vlad}&text={message8}&parse_mode=MarkdownV2"
-            url_nikita = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_nikita}&text={message8}&parse_mode=MarkdownV2"
-            url_dasha = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_dasha}&text={message8}&parse_mode=MarkdownV2"
-            url_kolya = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_kolya}&text={message8}&parse_mode=MarkdownV2"
+            url_vlad = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_vlad}&text={message9}&parse_mode=MarkdownV2"
+            url_nikita = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_nikita}&text={message9}&parse_mode=MarkdownV2"
+            url_dasha = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_dasha}&text={message9}&parse_mode=MarkdownV2"
+            url_kolya = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_kolya}&text={message9}&parse_mode=MarkdownV2"
             urls = [url_vlad, url_nikita, url_dasha, url_kolya]
 
             '''with ThreadPoolExecutor(max_workers=3) as pool:
@@ -392,7 +395,8 @@ def timetable(request):
         'title': 'Расписание интеллектуальных игр Break Brain',
         'form': form,
         'choice_quiz_game': choice_quiz_game,
-        'choice_quiz_game_first': choice_quiz_game_first
+        'choice_quiz_game_first': choice_quiz_game_first,
+        'team_rating': TeamRanking.objects.all().order_by('-count_scores')
     }
     return render(request, 'quiz/timetable.html', data)
 
@@ -454,7 +458,7 @@ def rules(request):
                         '- *команда:* ' + write_quiz.name_team +
                         '\n- *капитан*: ' + write_quiz.name_leader + '\n- *телефон*: ' + str(
                     write_quiz.phone_number) + '\n- *email*: ' + write_quiz.email + '\n- *кол-во*: ' + str(
-                    write_quiz.count_players) + '\n- *комментарий*: ' + write_quiz.comment)
+                    write_quiz.count_players) + '\n- *комментарий*: ' + write_quiz.comment + '\n- *сертификат*: ' + write_quiz.certificate)
             message1 = message.replace('.', '\\.')
             message2 = message1.replace('(', '\\(')
             message3 = message2.replace(')', '\\)')
@@ -463,11 +467,12 @@ def rules(request):
             message6 = message5.replace('?', '\\?')
             message7 = message6.replace(',', '\\,')
             message8 = message7.replace('`', '\\`')
+            message9 = message8.replace('_', '\\_')
 
-            url_vlad = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_vlad}&text={message8}&parse_mode=MarkdownV2"
-            url_nikita = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_nikita}&text={message8}&parse_mode=MarkdownV2"
-            url_dasha = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_dasha}&text={message8}&parse_mode=MarkdownV2"
-            url_kolya = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_kolya}&text={message8}&parse_mode=MarkdownV2"
+            url_vlad = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_vlad}&text={message9}&parse_mode=MarkdownV2"
+            url_nikita = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_nikita}&text={message9}&parse_mode=MarkdownV2"
+            url_dasha = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_dasha}&text={message9}&parse_mode=MarkdownV2"
+            url_kolya = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_kolya}&text={message9}&parse_mode=MarkdownV2"
             urls = [url_vlad, url_nikita, url_dasha, url_kolya]
 
             '''with ThreadPoolExecutor(max_workers=3) as pool:
@@ -512,6 +517,370 @@ def rules(request):
         'title': 'Правила интеллектуальной игры Break Brain',
         'form': form,
         'choice_quiz_game': choice_quiz_game,
-        'choice_quiz_game_first': choice_quiz_game_first
+        'choice_quiz_game_first': choice_quiz_game_first,
+        'team_rating': TeamRanking.objects.all().order_by('-count_scores')
     }
     return render(request, 'quiz/rules.html', data)
+
+def game_rules(request, game, time):
+    form = WriteQuizForm()
+    choice_quiz_game = [(i.id, i.name + ' (' + i.place.name + ' - ' + i.place.address + ')') for i in
+                        QuizGame.objects.all().order_by('date').filter(date__gte=timezone.now()).filter(visible=True)]
+    choice_quiz_game_first = QuizGame.objects.all().order_by('date').filter(date__gte=timezone.now()).filter(visible=True).first()
+    #form.fields["quiz_game_"].choices = choice_quiz_game
+    #form.fields['quiz_game_'].empty_label = choice_quiz_game[2]
+    #print(choice_quiz_game)
+    #print(choice_quiz_game[0])
+    if request.method == "POST":
+        form = WriteQuizForm(request.POST)
+        if form.is_valid():
+            write_quiz = form.save(commit=False)
+            write_quiz.date = timezone.now() + timedelta(hours=3)
+            if request.POST.get("quiz_game"):
+                q_g = QuizGame.objects.get(id=request.POST.get("quiz_game"))
+                # w_q1 = WriteQuiz.objects.filter(name_team=form.cleaned_data['name_team'], quiz_game=q_g).first()
+                for w_q in WriteQuiz.objects.filter(name_team=form.cleaned_data['name_team']).all():
+                    if (w_q.quiz_game.name in q_g.name) or (q_g.name in w_q.quiz_game.name):
+                        print('invalid-dublicate_name_team')
+                        response = {
+                            'error_name_team': 'invalid-dublicate_name_team',
+                        }
+                        return JsonResponse(response, status=200)
+                for w_q in WriteQuiz.objects.filter(name_leader=form.cleaned_data['name_leader']).all():
+                    if (w_q.quiz_game.name in q_g.name) or (q_g.name in w_q.quiz_game.name):
+                        print('invalid-dublicate_name_leader')
+                        response = {
+                            'error_name_leader': 'invalid-dublicate_name_leader',
+                        }
+                        return JsonResponse(response, status=200)
+                write_quiz.quiz_game = q_g
+                TeamRanking.objects.get_or_create(team=form.cleaned_data['name_team'])
+                team = TeamRanking.objects.filter(team=form.cleaned_data['name_team']).first()
+                certifi = Certificate.objects.filter(number=form.cleaned_data['certificate'],
+                                                     team_ranking=team).first()
+                if form.cleaned_data['certificate'] != '' and not certifi:
+                    print('invalid-certificate')
+                    response = {
+                        'error_certificate': 'invalid-certificate',
+                    }
+                    return JsonResponse(response, status=200)
+            '''if form.cleaned_data['quiz_game_'] is not None:
+                write_quiz.quiz_game = form.cleaned_data['quiz_game_']'''
+            write_quiz.count_players = request.POST.get("count_players")
+            write_quiz.save()
+            response = {
+                '': ''
+            }
+
+            messages.success(request,
+                             'Уважаемый ' + write_quiz.name_leader + '! Ваша команда "' + write_quiz.name_team + '" успешно записана на игру "' + write_quiz.quiz_game.name + '" в ' + write_quiz.quiz_game.place.name + ' (' + write_quiz.quiz_game.date.strftime(
+                                 '%A, %d %b') + ')')
+            message = ('*' + write_quiz.quiz_game.name + '\n' + write_quiz.quiz_game.place.name + '* (' + write_quiz.quiz_game.date.strftime('%A, %d %b') + ')\n\n' +
+                        '- *команда:* ' + write_quiz.name_team +
+                        '\n- *капитан*: ' + write_quiz.name_leader + '\n- *телефон*: ' + str(
+                    write_quiz.phone_number) + '\n- *email*: ' + write_quiz.email + '\n- *кол-во*: ' + str(
+                    write_quiz.count_players) + '\n- *комментарий*: ' + write_quiz.comment + '\n- *сертификат*: ' + write_quiz.certificate)
+            message1 = message.replace('.', '\\.')
+            message2 = message1.replace('(', '\\(')
+            message3 = message2.replace(')', '\\)')
+            message4 = message3.replace('-', '\\-')
+            message5 = message4.replace('!', '\\!')
+            message6 = message5.replace('?', '\\?')
+            message7 = message6.replace(',', '\\,')
+            message8 = message7.replace('`', '\\`')
+            message9 = message8.replace('_', '\\_')
+
+            url_vlad = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_vlad}&text={message9}&parse_mode=MarkdownV2"
+            url_nikita = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_nikita}&text={message9}&parse_mode=MarkdownV2"
+            url_dasha = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_dasha}&text={message9}&parse_mode=MarkdownV2"
+            url_kolya = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_kolya}&text={message9}&parse_mode=MarkdownV2"
+            urls = [url_vlad, url_nikita, url_dasha, url_kolya]
+
+            with ThreadPoolExecutor(max_workers=3) as pool:
+                list(pool.map(get_url, urls))
+
+            '''send_mail(
+                "Запись на квиз Break Brain",
+                ["Команда " + write_quiz.name_team + ' успешно записана на игру ' + write_quiz.quiz_game.name + ' в ' + write_quiz.quiz_game.place.name],
+                "breakbrainquiz@mail.ru",
+                [write_quiz.email],
+                fail_silently=False,
+            )'''
+            return JsonResponse(status=200, data=response)
+        else:
+            print('eer')
+            if request.POST.get("quiz_game"):
+                q_g = QuizGame.objects.get(id=request.POST.get("quiz_game"))
+                # w_q1 = WriteQuiz.objects.filter(name_team=form.cleaned_data['name_team'], quiz_game=q_g).first()
+                for w_q in WriteQuiz.objects.filter(name_team=request.POST.get("name_team")).all():
+                    if (w_q.quiz_game.name in q_g.name) or (q_g.name in w_q.quiz_game.name):
+                        print('invalid-dublicate_name_team')
+                        response = {
+                            'errors': form.errors,
+                            'error_name_team': 'invalid-dublicate_name_team',
+                        }
+                        return JsonResponse(response, status=200)
+                for w_q in WriteQuiz.objects.filter(name_leader=request.POST.get("name_leader")).all():
+                    if (w_q.quiz_game.name in q_g.name) or (q_g.name in w_q.quiz_game.name):
+                        print('invalid-dublicate_name_leader')
+                        response = {
+                            'errors': form.errors,
+                            'error_name_leader': 'invalid-dublicate_name_leader',
+                        }
+                        return JsonResponse(response, status=200)
+            response = {
+                'errors': form.errors,
+            }
+            return JsonResponse(response, status=200)
+    data = {
+        'quiz_game': QuizGame.objects.all().order_by('date').filter(date__gte=timezone.now()),
+        'title': 'Правила интеллектуальной игры Break Brain',
+        'form': form,
+        'choice_quiz_game': choice_quiz_game,
+        'choice_quiz_game_first': choice_quiz_game_first,
+        'team_rating': TeamRanking.objects.all().order_by('-count_scores'),
+        'time': time,
+        'game': game,
+    }
+    return render(request, 'quiz/game_rules.html', data)
+
+def rating(request):
+    form = WriteQuizForm()
+    choice_quiz_game = [(i.id, i.name + ' (' + i.place.name + ' - ' + i.place.address + ')') for i in
+                        QuizGame.objects.all().order_by('date').filter(date__gte=timezone.now()).filter(visible=True)]
+    choice_quiz_game_first = QuizGame.objects.all().order_by('date').filter(date__gte=timezone.now()).filter(visible=True).first()
+    #form.fields["quiz_game_"].choices = choice_quiz_game
+    #form.fields['quiz_game_'].empty_label = choice_quiz_game[2]
+    #print(choice_quiz_game)
+    #print(choice_quiz_game[0])
+    if request.method == "POST":
+        form = WriteQuizForm(request.POST)
+        if form.is_valid():
+            write_quiz = form.save(commit=False)
+            write_quiz.date = timezone.now() + timedelta(hours=3)
+            if request.POST.get("quiz_game"):
+                q_g = QuizGame.objects.get(id=request.POST.get("quiz_game"))
+                # w_q1 = WriteQuiz.objects.filter(name_team=form.cleaned_data['name_team'], quiz_game=q_g).first()
+                for w_q in WriteQuiz.objects.filter(name_team=form.cleaned_data['name_team']).all():
+                    if (w_q.quiz_game.name in q_g.name) or (q_g.name in w_q.quiz_game.name):
+                        print('invalid-dublicate_name_team')
+                        response = {
+                            'error_name_team': 'invalid-dublicate_name_team',
+                        }
+                        return JsonResponse(response, status=200)
+                for w_q in WriteQuiz.objects.filter(name_leader=form.cleaned_data['name_leader']).all():
+                    if (w_q.quiz_game.name in q_g.name) or (q_g.name in w_q.quiz_game.name):
+                        print('invalid-dublicate_name_leader')
+                        response = {
+                            'error_name_leader': 'invalid-dublicate_name_leader',
+                        }
+                        return JsonResponse(response, status=200)
+                write_quiz.quiz_game = q_g
+                TeamRanking.objects.get_or_create(team=form.cleaned_data['name_team'])
+                team = TeamRanking.objects.filter(team=form.cleaned_data['name_team']).first()
+                certifi = Certificate.objects.filter(number=form.cleaned_data['certificate'],
+                                                     team_ranking=team).first()
+                if form.cleaned_data['certificate'] != '' and not certifi:
+                    print('invalid-certificate')
+                    response = {
+                        'error_certificate': 'invalid-certificate',
+                    }
+                    return JsonResponse(response, status=200)
+            '''if form.cleaned_data['quiz_game_'] is not None:
+                write_quiz.quiz_game = form.cleaned_data['quiz_game_']'''
+            write_quiz.count_players = request.POST.get("count_players")
+            write_quiz.save()
+            response = {
+                '': ''
+            }
+
+            messages.success(request,
+                             'Уважаемый ' + write_quiz.name_leader + '! Ваша команда "' + write_quiz.name_team + '" успешно записана на игру "' + write_quiz.quiz_game.name + '" в ' + write_quiz.quiz_game.place.name + ' (' + write_quiz.quiz_game.date.strftime(
+                                 '%A, %d %b') + ')')
+            message = ('*' + write_quiz.quiz_game.name + '\n' + write_quiz.quiz_game.place.name + '* (' + write_quiz.quiz_game.date.strftime('%A, %d %b') + ')\n\n' +
+                        '- *команда:* ' + write_quiz.name_team +
+                        '\n- *капитан*: ' + write_quiz.name_leader + '\n- *телефон*: ' + str(
+                    write_quiz.phone_number) + '\n- *email*: ' + write_quiz.email + '\n- *кол-во*: ' + str(
+                    write_quiz.count_players) + '\n- *комментарий*: ' + write_quiz.comment + '\n- *сертификат*: ' + write_quiz.certificate)
+            message1 = message.replace('.', '\\.')
+            message2 = message1.replace('(', '\\(')
+            message3 = message2.replace(')', '\\)')
+            message4 = message3.replace('-', '\\-')
+            message5 = message4.replace('!', '\\!')
+            message6 = message5.replace('?', '\\?')
+            message7 = message6.replace(',', '\\,')
+            message8 = message7.replace('`', '\\`')
+            message9 = message8.replace('_', '\\_')
+
+            url_vlad = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_vlad}&text={message9}&parse_mode=MarkdownV2"
+            url_nikita = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_nikita}&text={message9}&parse_mode=MarkdownV2"
+            url_dasha = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_dasha}&text={message9}&parse_mode=MarkdownV2"
+            url_kolya = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_kolya}&text={message9}&parse_mode=MarkdownV2"
+            urls = [url_vlad, url_nikita, url_dasha, url_kolya]
+
+            '''with ThreadPoolExecutor(max_workers=4) as pool:
+                list(pool.map(get_url, urls))'''
+            time.sleep(3)
+
+            '''send_mail(
+                "Запись на квиз Break Brain",
+                ["Команда " + write_quiz.name_team + ' успешно записана на игру ' + write_quiz.quiz_game.name + ' в ' + write_quiz.quiz_game.place.name],
+                "breakbrainquiz@mail.ru",
+                [write_quiz.email],
+                fail_silently=False,
+            )'''
+            return JsonResponse(status=200, data=response)
+        else:
+            print('eer')
+            if request.POST.get("quiz_game"):
+                q_g = QuizGame.objects.get(id=request.POST.get("quiz_game"))
+                # w_q1 = WriteQuiz.objects.filter(name_team=form.cleaned_data['name_team'], quiz_game=q_g).first()
+                for w_q in WriteQuiz.objects.filter(name_team=request.POST.get("name_team")).all():
+                    if (w_q.quiz_game.name in q_g.name) or (q_g.name in w_q.quiz_game.name):
+                        print('invalid-dublicate_name_team')
+                        response = {
+                            'errors': form.errors,
+                            'error_name_team': 'invalid-dublicate_name_team',
+                        }
+                        return JsonResponse(response, status=200)
+                for w_q in WriteQuiz.objects.filter(name_leader=request.POST.get("name_leader")).all():
+                    if (w_q.quiz_game.name in q_g.name) or (q_g.name in w_q.quiz_game.name):
+                        print('invalid-dublicate_name_leader')
+                        response = {
+                            'errors': form.errors,
+                            'error_name_leader': 'invalid-dublicate_name_leader',
+                        }
+                        return JsonResponse(response, status=200)
+            response = {
+                'errors': form.errors,
+            }
+            return JsonResponse(response, status=200)
+    data = {
+        'quiz_game': QuizGame.objects.all().order_by('date').filter(date__gte=timezone.now()),
+        'title': 'Рейтинг команд интеллектуальной игры Break Brain',
+        'form': form,
+        'choice_quiz_game': choice_quiz_game,
+        'choice_quiz_game_first': choice_quiz_game_first,
+        'team_rating': TeamRanking.objects.all().order_by('-count_scores')
+    }
+    return render(request, 'quiz/rating.html', data)
+
+def user_agreement(request):
+    form = WriteQuizForm()
+    choice_quiz_game = [(i.id, i.name + ' (' + i.place.name + ' - ' + i.place.address + ')') for i in
+                        QuizGame.objects.all().order_by('date').filter(date__gte=timezone.now()).filter(visible=True)]
+    choice_quiz_game_first = QuizGame.objects.all().order_by('date').filter(date__gte=timezone.now()).filter(visible=True).first()
+    #form.fields["quiz_game_"].choices = choice_quiz_game
+    #form.fields['quiz_game_'].empty_label = choice_quiz_game[2]
+    #print(choice_quiz_game)
+    #print(choice_quiz_game[0])
+    if request.method == "POST":
+        form = WriteQuizForm(request.POST)
+        if form.is_valid():
+            write_quiz = form.save(commit=False)
+            write_quiz.date = timezone.now() + timedelta(hours=3)
+            if request.POST.get("quiz_game"):
+                q_g = QuizGame.objects.get(id=request.POST.get("quiz_game"))
+                # w_q1 = WriteQuiz.objects.filter(name_team=form.cleaned_data['name_team'], quiz_game=q_g).first()
+                for w_q in WriteQuiz.objects.filter(name_team=form.cleaned_data['name_team']).all():
+                    if (w_q.quiz_game.name in q_g.name) or (q_g.name in w_q.quiz_game.name):
+                        print('invalid-dublicate_name_team')
+                        response = {
+                            'error_name_team': 'invalid-dublicate_name_team',
+                        }
+                        return JsonResponse(response, status=200)
+                for w_q in WriteQuiz.objects.filter(name_leader=form.cleaned_data['name_leader']).all():
+                    if (w_q.quiz_game.name in q_g.name) or (q_g.name in w_q.quiz_game.name):
+                        print('invalid-dublicate_name_leader')
+                        response = {
+                            'error_name_leader': 'invalid-dublicate_name_leader',
+                        }
+                        return JsonResponse(response, status=200)
+                write_quiz.quiz_game = q_g
+                TeamRanking.objects.get_or_create(team=form.cleaned_data['name_team'])
+                team = TeamRanking.objects.filter(team=form.cleaned_data['name_team']).first()
+                certifi = Certificate.objects.filter(number=form.cleaned_data['certificate'],
+                                                     team_ranking=team).first()
+                if form.cleaned_data['certificate'] != '' and not certifi:
+                    print('invalid-certificate')
+                    response = {
+                        'error_certificate': 'invalid-certificate',
+                    }
+                    return JsonResponse(response, status=200)
+            '''if form.cleaned_data['quiz_game_'] is not None:
+                write_quiz.quiz_game = form.cleaned_data['quiz_game_']'''
+            write_quiz.count_players = request.POST.get("count_players")
+            write_quiz.save()
+            response = {
+                '': ''
+            }
+
+            messages.success(request,
+                             'Уважаемый ' + write_quiz.name_leader + '! Ваша команда "' + write_quiz.name_team + '" успешно записана на игру "' + write_quiz.quiz_game.name + '" в ' + write_quiz.quiz_game.place.name + ' (' + write_quiz.quiz_game.date.strftime(
+                                 '%A, %d %b') + ')')
+            message = ('*' + write_quiz.quiz_game.name + '\n' + write_quiz.quiz_game.place.name + '* (' + write_quiz.quiz_game.date.strftime('%A, %d %b') + ')\n\n' +
+                        '- *команда:* ' + write_quiz.name_team +
+                        '\n- *капитан*: ' + write_quiz.name_leader + '\n- *телефон*: ' + str(
+                    write_quiz.phone_number) + '\n- *email*: ' + write_quiz.email + '\n- *кол-во*: ' + str(
+                    write_quiz.count_players) + '\n- *комментарий*: ' + write_quiz.comment + '\n- *сертификат*: ' + write_quiz.certificate)
+            message1 = message.replace('.', '\\.')
+            message2 = message1.replace('(', '\\(')
+            message3 = message2.replace(')', '\\)')
+            message4 = message3.replace('-', '\\-')
+            message5 = message4.replace('!', '\\!')
+            message6 = message5.replace('?', '\\?')
+            message7 = message6.replace(',', '\\,')
+            message8 = message7.replace('`', '\\`')
+            message9 = message8.replace('_', '\\_')
+
+            url_vlad = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_vlad}&text={message9}&parse_mode=MarkdownV2"
+            url_nikita = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_nikita}&text={message9}&parse_mode=MarkdownV2"
+            url_dasha = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_dasha}&text={message9}&parse_mode=MarkdownV2"
+            url_kolya = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id_kolya}&text={message9}&parse_mode=MarkdownV2"
+            urls = [url_vlad, url_nikita, url_dasha, url_kolya]
+
+            with ThreadPoolExecutor(max_workers=4) as pool:
+                list(pool.map(get_url, urls))
+
+            '''send_mail(
+                "Запись на квиз Break Brain",
+                ["Команда " + write_quiz.name_team + ' успешно записана на игру ' + write_quiz.quiz_game.name + ' в ' + write_quiz.quiz_game.place.name],
+                "breakbrainquiz@mail.ru",
+                [write_quiz.email],
+                fail_silently=False,
+            )'''
+            return JsonResponse(status=200, data=response)
+        else:
+            print('eer')
+            if request.POST.get("quiz_game"):
+                q_g = QuizGame.objects.get(id=request.POST.get("quiz_game"))
+                # w_q1 = WriteQuiz.objects.filter(name_team=form.cleaned_data['name_team'], quiz_game=q_g).first()
+                for w_q in WriteQuiz.objects.filter(name_team=request.POST.get("name_team")).all():
+                    if (w_q.quiz_game.name in q_g.name) or (q_g.name in w_q.quiz_game.name):
+                        print('invalid-dublicate_name_team')
+                        response = {
+                            'errors': form.errors,
+                            'error_name_team': 'invalid-dublicate_name_team',
+                        }
+                        return JsonResponse(response, status=200)
+                for w_q in WriteQuiz.objects.filter(name_leader=request.POST.get("name_leader")).all():
+                    if (w_q.quiz_game.name in q_g.name) or (q_g.name in w_q.quiz_game.name):
+                        print('invalid-dublicate_name_leader')
+                        response = {
+                            'errors': form.errors,
+                            'error_name_leader': 'invalid-dublicate_name_leader',
+                        }
+                        return JsonResponse(response, status=200)
+            response = {
+                'errors': form.errors,
+            }
+            return JsonResponse(response, status=200)
+    data = {
+        'quiz_game': QuizGame.objects.all().order_by('date').filter(date__gte=timezone.now()),
+        'title': 'Пользовательское соглашение интеллектуальной игры Break Brain',
+        'form': form,
+        'choice_quiz_game': choice_quiz_game,
+        'choice_quiz_game_first': choice_quiz_game_first,
+        'team_rating': TeamRanking.objects.all().order_by('-count_scores')
+    }
+    return render(request, 'quiz/user_agreement.html', data)

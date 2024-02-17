@@ -92,8 +92,8 @@ def f():
 
 class TeamRanking(models.Model):
     team = models.CharField(max_length=50, verbose_name='Название команды')
-    count_games = models.IntegerField(verbose_name="Количество игр", null=True, blank=True)
-    count_scores = models.IntegerField(verbose_name="Количество баллов", null=True, blank=True)
+    count_games = models.IntegerField(verbose_name="Количество игр", null=True, blank=True, default=0)
+    count_scores = models.IntegerField(verbose_name="Количество баллов", null=True, blank=True, default=0)
 
     class Meta:
         verbose_name = 'рейтинг команды'
